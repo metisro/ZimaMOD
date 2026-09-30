@@ -69,7 +69,7 @@ x-casaos:
   version: "1.1.37"
   updateAt: "2026-09-30"
   releaseNotes:
-    en_us: |-
+    en_us: '### Fixed - Restored the MOD Store hover launcher on ZimaOS 1.7.1 dashboard app tiles. - Applied Dashboard Themes to ZimaOS 1.7.1 app cards without changing container action-button layout.'
       ### Fixed
       - Restored the MOD Store hover launcher on ZimaOS 1.7.1 dashboard app tiles.
       - Applied Dashboard Themes to ZimaOS 1.7.1 app cards without changing container action-button layout.

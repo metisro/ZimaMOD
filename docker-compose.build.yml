@@ -77,7 +77,7 @@ x-casaos:
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
   version: "1.1.37-local"
-  updateAt: "2026-06-25"
+  updateAt: "2026-09-30"
   releaseNotes:
     en_us: Local development build.
   repo: https://github.com/metisro/ZimaMOD
