@@ -19,6 +19,7 @@
   const FILTER_SVG_ID = MOD_ID + "-svg";
   const FILTER_ID = MOD_ID + "-distortion";
   const MODAL_ID = MOD_ID + "-modal";
+  const TOP_STYLE_ID = MOD_ID + "-top-style";
   const SHADOW_STYLE_ID = MOD_ID + "-shadow-style";
   const SHADOW_THEME_STYLE_ID = MOD_ID + "-shadow-theme-style";
   const SURFACE_CLASS = MOD_ID + "-surface";
@@ -233,6 +234,16 @@
     });
   }
 
+  function markTopAppSurfaces(root = document) {
+    findAll(root, ".apps-panel-app-card-item[data-app-key]").forEach(handle => {
+      const card = [...handle.children].find(element => element.classList.contains("group"));
+      if (!card) return;
+
+      handle.classList.add(HANDLE_CLASS);
+      card.classList.add(SURFACE_CLASS, APP_CLASS, APP_BLUR_CLASS);
+    });
+  }
+
   function markWidgetSurfaces(root = document) {
     findAll(root, ".rounded-lg").forEach(element => {
       if (!hasDashboardContext(element)) return;
@@ -267,12 +278,8 @@
     header.classList.add(SURFACE_CLASS, HEADER_CLASS);
   }
 
-  function injectShadowStyles(shadowRoot) {
-    if (shadowRoot.getElementById(SHADOW_STYLE_ID)) return;
-
-    const style = document.createElement("style");
-    style.id = SHADOW_STYLE_ID;
-    style.textContent = `
+  function surfaceStyles() {
+    return `
       .${HANDLE_CLASS} {
         position: relative;
         border-radius: var(--dtm-radius);
@@ -319,6 +326,11 @@
         z-index: 2;
       }
 
+      .${APP_BLUR_CLASS} > :not(button) {
+        position: relative;
+        z-index: 2;
+      }
+
       .${APP_CLASS} [class*="dropdown" i],
       .${APP_CLASS} [class*="menu" i],
       .${APP_CLASS} [class*="popover" i],
@@ -327,6 +339,23 @@
         z-index: 50;
       }
     `;
+  }
+
+  function injectTopStyles() {
+    if (document.getElementById(TOP_STYLE_ID)) return;
+
+    const style = document.createElement("style");
+    style.id = TOP_STYLE_ID;
+    style.textContent = surfaceStyles();
+    document.head.appendChild(style);
+  }
+
+  function injectShadowStyles(shadowRoot) {
+    if (shadowRoot.getElementById(SHADOW_STYLE_ID)) return;
+
+    const style = document.createElement("style");
+    style.id = SHADOW_STYLE_ID;
+    style.textContent = surfaceStyles();
 
     shadowRoot.prepend(style);
   }
@@ -363,6 +392,7 @@
   }
 
   function refreshTopDocument(root = document) {
+    markTopAppSurfaces(root);
     markWidgetSurfaces(root);
     markSearchSurfaces(root);
     markHeaderSurface();
@@ -502,6 +532,7 @@
     };
 
     injectFilter();
+    injectTopStyles();
     applyTheme(state.theme);
     void loadConfig();
     refreshTopDocument();

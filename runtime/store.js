@@ -26,9 +26,9 @@
 
   function tileCandidate(element) {
     if (!element) return null;
-    let candidate = element.parentElement;
+    let candidate = element;
     const candidates = [];
-    for (let depth = 0; candidate && depth < 6; depth++, candidate = candidate.parentElement) {
+    for (let depth = 0; candidate && depth < 7; depth++) {
       const rect = candidate.getBoundingClientRect();
       if (
         rect.width >= 130 &&
@@ -39,22 +39,40 @@
       ) {
         candidates.push(candidate);
       }
+      candidate = candidate.parentElement || candidate.getRootNode?.().host || null;
     }
     return candidates[0] || null;
   }
 
+  function isZimaMODName(value) {
+    return String(value || "").trim().replace(/[\s_-]+/g, "").toLowerCase() === "zimamod";
+  }
+
+  function isZimaMODApp(element) {
+    return Boolean(element) && [
+      element.id,
+      element.dataset?.appId,
+      element.dataset?.appName,
+      element.dataset?.app,
+      element.getAttribute?.("data-app-id"),
+      element.getAttribute?.("data-app-name"),
+      element.getAttribute?.("data-app")
+    ].some(isZimaMODName);
+  }
+
   function titleElement() {
-    return allElements("a.block.one-line.max-w-36")
-      .find(element => (element.textContent || "").trim() === "ZimaMOD") || null;
+    return allElements("*").find(element =>
+      element.childElementCount === 0 && isZimaMODName(element.textContent)
+    ) || null;
   }
 
   function findAppHandle() {
-    return allElements("#app-zimamod").find(element => element.classList.contains("handle")) || null;
+    return allElements("[id], [data-app-id], [data-app-name], [data-app]")
+      .find(isZimaMODApp) || null;
   }
 
   function findAppTile() {
-    const title = titleElement();
-    return title ? tileCandidate(title) : tileCandidate(findAppHandle());
+    return tileCandidate(findAppHandle()) || tileCandidate(titleElement());
   }
 
   function showLauncher(button) {
@@ -88,7 +106,7 @@
       "position:absolute",
       "z-index:20",
       "left:50%",
-      "bottom:25px",
+      "bottom:40px",
       "padding:6px 13px",
       "border:1px solid rgba(112,225,255,.55)",
       "border-radius:999px",

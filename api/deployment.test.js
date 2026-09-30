@@ -115,6 +115,10 @@ test("Dashboard Themes ships as an independent theme manager", () => {
   assert.doesNotMatch(mod, /translateZ\(0\)/);
   assert.match(mod, /const APP_BLUR_CLASS = MOD_ID \+ "-app-blur"/);
   assert.match(mod, /element\.classList\.add\(APP_BLUR_CLASS\)/);
+  assert.match(mod, /\.apps-panel-app-card-item\[data-app-key\]/);
+  assert.match(mod, /function markTopAppSurfaces/);
+  assert.match(mod, /function injectTopStyles/);
+  assert.match(mod, /> :not\(button\)\s*\{/);
   assert.doesNotMatch(mod, /element\.remove\(\)/);
   assert.match(mod, /\[role="menu"\]/);
   assert.doesNotMatch(mod, /\[role="listbox"\]\s*\{\s*position:\s*relative/);

@@ -145,3 +145,12 @@ test("write authorization uses a modal rather than a native prompt", () => {
   assert.match(source, /Authorize this change/);
   assert.match(source, /navigator\.clipboard\.readText/);
 });
+
+test("MOD Store launcher supports ZimaOS app IDs and visible app labels", () => {
+  const source = fs.readFileSync(path.join(__dirname, "store.js"), "utf8");
+
+  assert.match(source, /data-app-id/);
+  assert.match(source, /data-app-name/);
+  assert.match(source, /childElementCount === 0/);
+  assert.doesNotMatch(source, /classList\.contains\("handle"\)/);
+});
